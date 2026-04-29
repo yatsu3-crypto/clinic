@@ -7064,6 +7064,37 @@
 }
 
 /* スライドが切り替わるときの章マーク表示制御 */
+
+
+/* ===== iPhone等の縦持ちで強制横向き ===== */
+@media screen and (orientation: portrait) and (max-width: 1024px) {
+  html, body {
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+  }
+  .signage {
+    /* 縦持ち時:画面を90度回転させて横向きとして表示 */
+    width: 100vh !important;
+    height: 100vw !important;
+    transform: rotate(90deg) translateY(-100vw);
+    transform-origin: top left;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
+}
+
+/* ===== 縦長すぎる時の警告 (一応用意・トリガーされない設計) ===== */
+
+/* ===== 通常の横向き or PC ===== */
+@media screen and (orientation: landscape), screen and (min-width: 1025px) {
+  html, body {
+    width: 100vw;
+    height: 100vh;
+  }
+}
+
 </style>
 </head>
 <body>
