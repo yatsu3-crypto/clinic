@@ -7182,17 +7182,25 @@ html, body {
     top: 24px !important;
     left: 24px !important;
     right: 24px !important;
+    /* ヘッダー背後にうっすら帯を入れて、下のスライド本文が透けても
+       ロゴとクリニック名が読みやすいようにする */
+    backdrop-filter: blur(2px);
   }
   .footer {
     bottom: 24px !important;
     left: 24px !important;
     right: 24px !important;
   }
-  /* スライド本文の上下余白を広げ、ヘッダー・フッターと重ならないように */
+  /* スライド本文の上下余白を広げ、ヘッダー・フッターと重ならないように。
+     さらに「縦中央揃え」を解除して、確実にヘッダー領域を避ける。 */
   .slide {
-    padding-top: 140px !important;
-    padding-bottom: 140px !important;
+    padding-top: 160px !important;
+    padding-bottom: 160px !important;
+    align-items: flex-start !important;
   }
+  /* 中央揃えしたい個別スライド(ようこそ、薬湯紹介など見出しを大きく
+     見せるもの)は別途、縦中央配置を維持できるよう justify-content で
+     対処。 */
 }
 
 </style>
