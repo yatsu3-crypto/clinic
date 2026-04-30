@@ -7124,6 +7124,29 @@
   display: none !important;
 }
 
+/* ===== 16:9レターボックス強制 =====
+   iPad(4:3寄り)からHDMIでTV(16:9)にミラーリング出力する運用。
+   どの画面でも常に16:9の比率を保ち、足りない部分は黒帯で埋める。
+   これにより、TV表示と完全に同じレイアウトがiPadでも見える。 */
+html, body {
+  background: #000 !important;  /* レターボックスの黒帯 */
+}
+.signage {
+  /* 画面中央に16:9の枠を配置。
+     画面幅と (画面高さ × 16/9) を比較して小さい方に合わせる。 */
+  position: fixed !important;
+  top: 50% !important;
+  left: 50% !important;
+  width: min(100vw, 177.778vh) !important;   /* 100vh × 16/9 = 177.78vh */
+  height: min(56.25vw, 100vh) !important;    /* 100vw × 9/16 = 56.25vw */
+  transform: translate(-50%, -50%) !important;
+}
+/* fixed要素(ヘッダー・フッター等)も .signage の中に閉じ込める。
+   元々 position:fixed で画面基準だったものを、.signage 基準に変える。 */
+.header, .footer, .chapter-mark {
+  position: absolute !important;
+}
+
 </style>
 </head>
 <body>
