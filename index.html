@@ -7175,17 +7175,23 @@ html, body {
 /* ===== TVオーバースキャン対策 =====
    一部のTVは入力映像の周囲を切り取って表示する(オーバースキャン)。
    重要な要素(ヘッダー・タイトル等)が画面端で切れるのを防ぐため、
-   セーフエリアを確保する。 */
+   セーフエリアを確保する。
+   さらに、本文がヘッダー/フッターに食い込まないよう padding も拡張。 */
 @media screen and (min-width: 1024px) {
   .header {
-    top: 12px !important;       /* 既定値より少し下げる */
-    left: 12px !important;
-    right: 12px !important;
+    top: 24px !important;
+    left: 24px !important;
+    right: 24px !important;
   }
   .footer {
-    bottom: 12px !important;
-    left: 12px !important;
-    right: 12px !important;
+    bottom: 24px !important;
+    left: 24px !important;
+    right: 24px !important;
+  }
+  /* スライド本文の上下余白を広げ、ヘッダー・フッターと重ならないように */
+  .slide {
+    padding-top: 140px !important;
+    padding-bottom: 140px !important;
   }
 }
 
