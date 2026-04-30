@@ -7067,7 +7067,10 @@
 /* スライドが切り替わるときの章マーク表示制御 */
 
 
-/* ===== iPhone等の縦持ちで強制横向き ===== */
+/* ===== iPhone等の縦持ちで強制横向き(無効化) =====
+   旧来の強制回転処理。新しい1920×1080 scale方式と衝突するため無効化。
+   縦持ち画面でもscale方式が自動で上下黒帯にして横向きレイアウトを表示する。 */
+/*
 @media screen and (orientation: portrait) and (max-width: 1024px) {
   html, body {
     overflow: hidden;
@@ -7075,7 +7078,6 @@
     height: 100vh;
   }
   .signage {
-    /* 縦持ち時:画面を90度回転させて横向きとして表示 */
     width: 100vh !important;
     height: 100vw !important;
     transform: rotate(90deg) translateY(-100vw);
@@ -7085,6 +7087,7 @@
     left: 0;
   }
 }
+*/
 
 /* ===== 縦長すぎる時の警告 (一応用意・トリガーされない設計) ===== */
 
