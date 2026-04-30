@@ -9805,6 +9805,12 @@ html, body {
     const signage = document.getElementById('signage');
     if (!signage) return;
 
+    // デバッグ表示用の小さなパネル
+    const dbg = document.createElement('div');
+    dbg.id = 'scale-debug';
+    dbg.style.cssText = 'position:fixed;top:8px;right:8px;z-index:99999;background:rgba(0,0,0,0.8);color:#0f0;font-family:monospace;font-size:11px;padding:6px 10px;border-radius:4px;pointer-events:none;line-height:1.4;';
+    document.body.appendChild(dbg);
+
     function rescale() {
       const sw = window.innerWidth;
       const sh = window.innerHeight;
@@ -9813,7 +9819,6 @@ html, body {
       const scaledH = 1080 * scale;
       const offsetX = (sw - scaledW) / 2;
       const offsetY = (sh - scaledH) / 2;
-      // !important で他のCSSに勝つため setProperty を使う
       signage.style.setProperty('transform', `translate(${offsetX}px, ${offsetY}px) scale(${scale})`, 'important');
       signage.style.setProperty('transform-origin', '0 0', 'important');
       signage.style.setProperty('width', '1920px', 'important');
@@ -9821,22 +9826,29 @@ html, body {
       signage.style.setProperty('position', 'absolute', 'important');
       signage.style.setProperty('top', '0', 'important');
       signage.style.setProperty('left', '0', 'important');
+      
+      // デバッグ情報を表示
+      const rect = signage.getBoundingClientRect();
+      dbg.innerHTML = `
+        viewport: ${sw}×${sh}<br>
+        scale: ${scale.toFixed(3)}<br>
+        scaled: ${scaledW.toFixed(0)}×${scaledH.toFixed(0)}<br>
+        offset: ${offsetX.toFixed(0)},${offsetY.toFixed(0)}<br>
+        rect: ${rect.width.toFixed(0)}×${rect.height.toFixed(0)}<br>
+        signage.cw: ${signage.clientWidth}×${signage.clientHeight}
+      `;
     }
     
-    // 即時実行
     rescale();
-    // ロード後の再実行(画面サイズが確定してから)
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', rescale);
     }
     window.addEventListener('load', rescale);
     window.addEventListener('resize', rescale);
     window.addEventListener('orientationchange', () => {
-      // orientation変更後はサイズ確定までラグがあるので少し遅延
       setTimeout(rescale, 100);
       setTimeout(rescale, 300);
     });
-    // 念のため定期チェック(最初の数秒だけ)
     let count = 0;
     const interval = setInterval(() => {
       rescale();
