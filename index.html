@@ -9813,12 +9813,36 @@ html, body {
       const scaledH = 1080 * scale;
       const offsetX = (sw - scaledW) / 2;
       const offsetY = (sh - scaledH) / 2;
-      signage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
-      signage.style.transformOrigin = '0 0';
+      // !important で他のCSSに勝つため setProperty を使う
+      signage.style.setProperty('transform', `translate(${offsetX}px, ${offsetY}px) scale(${scale})`, 'important');
+      signage.style.setProperty('transform-origin', '0 0', 'important');
+      signage.style.setProperty('width', '1920px', 'important');
+      signage.style.setProperty('height', '1080px', 'important');
+      signage.style.setProperty('position', 'absolute', 'important');
+      signage.style.setProperty('top', '0', 'important');
+      signage.style.setProperty('left', '0', 'important');
     }
+    
+    // 即時実行
     rescale();
+    // ロード後の再実行(画面サイズが確定してから)
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', rescale);
+    }
+    window.addEventListener('load', rescale);
     window.addEventListener('resize', rescale);
-    window.addEventListener('orientationchange', rescale);
+    window.addEventListener('orientationchange', () => {
+      // orientation変更後はサイズ確定までラグがあるので少し遅延
+      setTimeout(rescale, 100);
+      setTimeout(rescale, 300);
+    });
+    // 念のため定期チェック(最初の数秒だけ)
+    let count = 0;
+    const interval = setInterval(() => {
+      rescale();
+      count++;
+      if (count > 20) clearInterval(interval);
+    }, 100);
   })();
 </script>
 
