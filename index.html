@@ -7124,38 +7124,28 @@
   display: none !important;
 }
 
-/* ===== 16:9固定サイズ + 等比スケール方式 =====
+/* ===== 16:9固定サイズ + JSによるスケール =====
    iPad(4:3寄り)からHDMIでTV(16:9)にミラーリング出力する運用。
    .signage を1920×1080の固定サイズで構築し、
-   画面に合わせて transform: scale で縮小拡大する。
-   これにより、TV/iPad/どんな画面でも同じレイアウトで表示される。
-   足りない部分は黒帯で埋められる。 */
+   JavaScriptで画面サイズに合わせてscale&中央配置する。 */
 html, body {
-  background: #000 !important;  /* レターボックスの黒帯 */
+  background: #000 !important;
   margin: 0 !important;
   padding: 0 !important;
-  width: 100vw !important;
-  height: 100vh !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
   overflow: hidden !important;
 }
 .signage {
-  /* 1920×1080の固定キャンバス */
-  position: relative !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
   width: 1920px !important;
   height: 1080px !important;
-  flex-shrink: 0 !important;
-  /* 画面サイズに合わせて等比スケール
-     - 画面幅 / 1920  と  画面高 / 1080  の小さい方にフィット */
-  transform: scale(min(calc(100vw / 1920), calc(100vh / 1080))) !important;
-  transform-origin: center center !important;
-  top: auto !important;
-  left: auto !important;
+  /* transform は JavaScript側で動的に設定する */
 }
-/* fixed要素(ヘッダー・フッター等)も .signage の中に閉じ込める。
-   元々 position:fixed で画面基準だったものを、.signage 基準に変える。 */
+
+/* fixed要素を .signage の中に閉じ込める */
 .header, .footer, .chapter-mark {
   position: absolute !important;
 }
@@ -9804,6 +9794,29 @@ html, body {
       }
     }
   });
+
+  // ========== 16:9固定サイズ + JSによるスケール&中央配置 ==========
+  // iPad/TVどちらでも完全に同じレイアウトで表示するため、
+  // 1920×1080のキャンバスを画面中央に等比配置する。
+  (function setupSignageScaling() {
+    const signage = document.getElementById('signage');
+    if (!signage) return;
+
+    function rescale() {
+      const sw = window.innerWidth;
+      const sh = window.innerHeight;
+      const scale = Math.min(sw / 1920, sh / 1080);
+      const scaledW = 1920 * scale;
+      const scaledH = 1080 * scale;
+      const offsetX = (sw - scaledW) / 2;
+      const offsetY = (sh - scaledH) / 2;
+      signage.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+      signage.style.transformOrigin = '0 0';
+    }
+    rescale();
+    window.addEventListener('resize', rescale);
+    window.addEventListener('orientationchange', rescale);
+  })();
 </script>
 
 </body>
