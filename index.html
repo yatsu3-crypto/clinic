@@ -7191,16 +7191,14 @@ html, body {
     left: 24px !important;
     right: 24px !important;
   }
-  /* スライド本文の上下余白を広げ、ヘッダー・フッターと重ならないように。
-     さらに「縦中央揃え」を解除して、確実にヘッダー領域を避ける。 */
+  /* スライド本文の上下余白を上下対称に拡張。
+     align-items:center で縦中央揃えは元の設計通り維持し、
+     padding で上下にヘッダー/フッターを避ける余白を確保。 */
   .slide {
-    padding-top: 160px !important;
-    padding-bottom: 160px !important;
-    align-items: flex-start !important;
+    padding-top: 130px !important;
+    padding-bottom: 130px !important;
+    align-items: center !important;
   }
-  /* 中央揃えしたい個別スライド(ようこそ、薬湯紹介など見出しを大きく
-     見せるもの)は別途、縦中央配置を維持できるよう justify-content で
-     対処。 */
 }
 
 </style>
