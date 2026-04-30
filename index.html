@@ -7134,18 +7134,25 @@ html, body {
   background: #000 !important;  /* レターボックスの黒帯 */
   margin: 0 !important;
   padding: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
 }
 .signage {
   /* 1920×1080の固定キャンバス */
-  position: fixed !important;
-  top: 50% !important;
-  left: 50% !important;
+  position: relative !important;
   width: 1920px !important;
   height: 1080px !important;
-  /* 中央揃え + 画面サイズに合わせて等比スケール
+  flex-shrink: 0 !important;
+  /* 画面サイズに合わせて等比スケール
      - 画面幅 / 1920  と  画面高 / 1080  の小さい方にフィット */
-  transform: translate(-50%, -50%) scale(min(calc(100vw / 1920), calc(100vh / 1080))) !important;
+  transform: scale(min(calc(100vw / 1920), calc(100vh / 1080))) !important;
   transform-origin: center center !important;
+  top: auto !important;
+  left: auto !important;
 }
 /* fixed要素(ヘッダー・フッター等)も .signage の中に閉じ込める。
    元々 position:fixed で画面基準だったものを、.signage 基準に変える。 */
