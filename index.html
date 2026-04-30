@@ -7132,6 +7132,21 @@
   display: none !important;
 }
 
+/* ===== スライドの重なり防止(強化) =====
+   CSSの重複定義や transition の不調で、複数スライドが
+   同時に見えてしまう問題への安全装置。
+   .active でないスライドは確実に非表示にする。 */
+.slide:not(.active) {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+.slide.active {
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 /* ===== signage を画面いっぱいに(レターボックスなし、シンプル) =====
    iPadからTVへのHDMIミラーリング用途。
    元のレイアウトをそのまま画面いっぱいに広げる。 */
@@ -7155,6 +7170,23 @@ html, body {
 /* fixed要素を .signage の中に閉じ込める */
 .header, .footer {
   position: absolute !important;
+}
+
+/* ===== TVオーバースキャン対策 =====
+   一部のTVは入力映像の周囲を切り取って表示する(オーバースキャン)。
+   重要な要素(ヘッダー・タイトル等)が画面端で切れるのを防ぐため、
+   セーフエリアを確保する。 */
+@media screen and (min-width: 1024px) {
+  .header {
+    top: 12px !important;       /* 既定値より少し下げる */
+    left: 12px !important;
+    right: 12px !important;
+  }
+  .footer {
+    bottom: 12px !important;
+    left: 12px !important;
+    right: 12px !important;
+  }
 }
 
 </style>
