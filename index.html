@@ -7178,27 +7178,26 @@ html, body {
    セーフエリアを確保する。
    さらに、本文がヘッダー/フッターに食い込まないよう padding も拡張。 */
 @media screen and (min-width: 1024px) {
-  .header {
-    top: 24px !important;
-    left: 24px !important;
-    right: 24px !important;
-    /* ヘッダー背後にうっすら帯を入れて、下のスライド本文が透けても
-       ロゴとクリニック名が読みやすいようにする */
-    backdrop-filter: blur(2px);
-  }
   .footer {
     bottom: 24px !important;
     left: 24px !important;
     right: 24px !important;
   }
-  /* スライド本文の上下余白を上下対称に拡張。
-     align-items:center で縦中央揃えは元の設計通り維持し、
-     padding で上下にヘッダー/フッターを避ける余白を確保。 */
+  /* スライド本文の上下余白を少し緩和(ヘッダー非表示にしたので
+     上の余白はそこまで要らない)。 */
   .slide {
-    padding-top: 130px !important;
-    padding-bottom: 130px !important;
+    padding-top: 80px !important;
+    padding-bottom: 100px !important;
     align-items: center !important;
   }
+}
+
+/* ===== ヘッダー(クリニック名+時計)を非表示 =====
+   iPad→TV運用で本文と衝突するため非表示。
+   サイネージ各スライド内にクリニック名・診療情報が含まれているので、
+   常時ヘッダー表示の必要なし。 */
+.header {
+  display: none !important;
 }
 
 </style>
