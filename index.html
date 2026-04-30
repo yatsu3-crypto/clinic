@@ -7089,8 +7089,6 @@
 }
 */
 
-/* ===== 縦長すぎる時の警告 (一応用意・トリガーされない設計) ===== */
-
 /* ===== 通常の横向き or PC ===== */
 @media screen and (orientation: landscape), screen and (min-width: 1025px) {
   html, body {
@@ -7127,29 +7125,28 @@
   display: none !important;
 }
 
-/* ===== 16:9固定サイズ + JSによるスケール =====
-   iPad(4:3寄り)からHDMIでTV(16:9)にミラーリング出力する運用。
-   .signage を1920×1080の固定サイズで構築し、
-   JavaScriptで画面サイズに合わせてscale&中央配置する。 */
+/* ===== signage を画面いっぱいに(レターボックスなし、シンプル) =====
+   iPadからTVへのHDMIミラーリング用途。
+   元のレイアウトをそのまま画面いっぱいに広げる。 */
 html, body {
-  background: #000 !important;
   margin: 0 !important;
   padding: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  width: 100vw !important;
+  height: 100vh !important;
   overflow: hidden !important;
+  background: var(--bg-deep) !important;
 }
 .signage {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 1920px !important;
-  height: 1080px !important;
-  /* transform は JavaScript側で動的に設定する */
+  position: relative !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  overflow: hidden !important;
+  /* transformはJSで上書きされない、シンプルに */
+  transform: none !important;
 }
 
 /* fixed要素を .signage の中に閉じ込める */
-.header, .footer, .chapter-mark {
+.header, .footer {
   position: absolute !important;
 }
 
@@ -9797,65 +9794,6 @@ html, body {
       }
     }
   });
-
-  // ========== 16:9固定サイズ + JSによるスケール&中央配置 ==========
-  // iPad/TVどちらでも完全に同じレイアウトで表示するため、
-  // 1920×1080のキャンバスを画面中央に等比配置する。
-  (function setupSignageScaling() {
-    const signage = document.getElementById('signage');
-    if (!signage) return;
-
-    // デバッグ表示用の小さなパネル
-    const dbg = document.createElement('div');
-    dbg.id = 'scale-debug';
-    dbg.style.cssText = 'position:fixed;top:8px;right:8px;z-index:99999;background:rgba(0,0,0,0.8);color:#0f0;font-family:monospace;font-size:11px;padding:6px 10px;border-radius:4px;pointer-events:none;line-height:1.4;';
-    document.body.appendChild(dbg);
-
-    function rescale() {
-      const sw = window.innerWidth;
-      const sh = window.innerHeight;
-      const scale = Math.min(sw / 1920, sh / 1080);
-      const scaledW = 1920 * scale;
-      const scaledH = 1080 * scale;
-      const offsetX = (sw - scaledW) / 2;
-      const offsetY = (sh - scaledH) / 2;
-      signage.style.setProperty('transform', `translate(${offsetX}px, ${offsetY}px) scale(${scale})`, 'important');
-      signage.style.setProperty('transform-origin', '0 0', 'important');
-      signage.style.setProperty('width', '1920px', 'important');
-      signage.style.setProperty('height', '1080px', 'important');
-      signage.style.setProperty('position', 'absolute', 'important');
-      signage.style.setProperty('top', '0', 'important');
-      signage.style.setProperty('left', '0', 'important');
-      
-      // デバッグ情報を表示
-      const rect = signage.getBoundingClientRect();
-      dbg.innerHTML = `
-        viewport: ${sw}×${sh}<br>
-        scale: ${scale.toFixed(3)}<br>
-        scaled: ${scaledW.toFixed(0)}×${scaledH.toFixed(0)}<br>
-        offset: ${offsetX.toFixed(0)},${offsetY.toFixed(0)}<br>
-        rect: ${rect.width.toFixed(0)}×${rect.height.toFixed(0)}<br>
-        signage.cw: ${signage.clientWidth}×${signage.clientHeight}
-      `;
-    }
-    
-    rescale();
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', rescale);
-    }
-    window.addEventListener('load', rescale);
-    window.addEventListener('resize', rescale);
-    window.addEventListener('orientationchange', () => {
-      setTimeout(rescale, 100);
-      setTimeout(rescale, 300);
-    });
-    let count = 0;
-    const interval = setInterval(() => {
-      rescale();
-      count++;
-      if (count > 20) clearInterval(interval);
-    }, 100);
-  })();
 </script>
 
 </body>
